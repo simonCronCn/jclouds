@@ -61,62 +61,63 @@ public interface ProjectApi {
    @SelectJson("projects")
    @Fallback(EmptyListOnNotFoundOr404.class)
    List<Project> list();
-   
+
    @Named("projects:get")
    @GET
    @Path("/{id}")
    @SelectJson("project")
    @Fallback(NullOnNotFoundOr404.class)
    Project get(@PathParam("id") String id);
-   
+
    @Named("projects:create")
    @POST
    @SelectJson("project")
-   @WrapWith("project") 
+   @WrapWith("project")
    Project create(@PayloadParam("name") String name, @Nullable @PayloadParam("description") String description,
          @PayloadParam("enabled") boolean enabled, @PayloadParam("is_domain") boolean isDomain,
-         @Nullable @PayloadParam("domain_id") String domainId, @Nullable @PayloadParam("parent_id") String parentId);
-   
+         @Nullable @PayloadParam("domain_id") String domainId, @Nullable @PayloadParam("parent_id") String parentId,
+         @Nullable @PayloadParam("scanner") String scanner);
+
    @Named("projects:update")
    @PATCH
    @Path("/{id}")
    @SelectJson("project")
    Project update(@PathParam("id") String id, @WrapWith("project") Project project);
-   
+
    @Named("projects:delete")
    @DELETE
    @Path("/{id}")
    @Fallback(FalseOnNotFoundOr404.class)
    boolean delete(@PathParam("id") String id);
-   
+
    @Named("projects:listTags")
    @GET
    @Path("/{projectId}/tags")
    @SelectJson("tags")
    Set<String> listTags(@PathParam("projectId") String projectId);
-   
+
    @Named("projects:hasTag")
    @HEAD
    @Path("/{projectId}/tags/{tag}")
    @Fallback(FalseOnNotFoundOr404.class)
    boolean hasTag(@PathParam("projectId") String projectId, @PathParam("tag") String tag);
-   
+
    @Named("projects:addTag")
    @PUT
    @Path("/{projectId}/tags/{tag}")
    void addTag(@PathParam("projectId") String projectId, @PathParam("tag") String tag);
-   
+
    @Named("projects:removeTag")
    @DELETE
    @Path("/{projectId}/tags/{tag}")
    void removeTag(@PathParam("projectId") String projectId, @PathParam("tag") String tag);
-   
+
    @Named("projects:setTags")
    @PUT
    @Path("/{projectId}/tags")
    @MapBinder(BindToJsonPayload.class)
    void setTags(@PathParam("projectId") String projectId, @PayloadParam("tags") Set<String> tags);
-   
+
    @Named("projects:removeTags")
    @DELETE
    @Path("/{projectId}/tags")

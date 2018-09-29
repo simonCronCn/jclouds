@@ -37,13 +37,13 @@ import com.google.common.collect.ImmutableSet;
 public class ProjectApiLiveTest extends BaseV3KeystoneApiLiveTest {
 
    private Project project;
-   
+
    @BeforeClass
    public void createTestProject() {
-      project = api().create(getClass().getSimpleName(), null, true, false, null, null);
+      project = api().create(getClass().getSimpleName(), null, true, false, null, null, null);
       assertNotNull(project.id());
    }
-   
+
    @Test
    public void testListProjects() {
       assertTrue(any(api().list(), new Predicate<Project>() {
@@ -53,12 +53,12 @@ public class ProjectApiLiveTest extends BaseV3KeystoneApiLiveTest {
          }
       }));
    }
-   
+
    @Test
    public void testGetProject() {
       assertNotNull(api().get(project.id()));
    }
-   
+
    @Test
    public void testUpdateProject() {
       Project updated = api().get(project.id());
@@ -66,42 +66,42 @@ public class ProjectApiLiveTest extends BaseV3KeystoneApiLiveTest {
       project = api().get(project.id());
       assertEquals(project.description(), "Updated");
    }
-   
+
    @Test
    public void testSetAndListTags() {
       api().setTags(project.id(), ImmutableSet.of("foo", "bar"));
       Set<String> projectTags = api().listTags(project.id());
       assertEquals(projectTags, ImmutableSet.of("foo", "bar"));
    }
-   
+
    @Test(dependsOnMethods = "testSetAndListTags")
    public void testHasTag() {
       assertTrue(api().hasTag(project.id(), "foo"));
    }
-   
+
    @Test(dependsOnMethods = "testSetAndListTags")
    public void testAddTag() {
       api().addTag(project.id(), "three");
       assertTrue(api().hasTag(project.id(), "three"));
    }
-   
+
    @Test(dependsOnMethods = "testSetAndListTags")
    public void testRemoveTag() {
       api().removeTag(project.id(), "bar");
       assertFalse(api().hasTag(project.id(), "bar"));
    }
-   
+
    @Test(dependsOnMethods = "testRemoveTag")
    public void testRemoveAllTags() {
       api().removeAllTags(project.id());
       assertTrue(api().listTags(project.id()).isEmpty());
    }
-   
+
    @AfterClass(alwaysRun = true)
    public void deleteProject() {
       assertTrue(api().delete(project.id()));
    }
-   
+
    private ProjectApi api() {
       return api.getProjectApi();
    }

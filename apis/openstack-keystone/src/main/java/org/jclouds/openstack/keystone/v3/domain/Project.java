@@ -34,27 +34,28 @@ public abstract class Project {
    public abstract boolean enabled();
    @Nullable public abstract String id();
    public abstract String name();
+   @Nullable public abstract String scanner();
    @Nullable public abstract String parentId();
    @Nullable public abstract List<String> tags();
    @Nullable public abstract Link link();
 
-   @SerializedNames({ "is_domain", "description", "domain_id", "domain_name", "enabled", "id", "name", "parent_id",
+   @SerializedNames({ "is_domain", "description", "domain_id", "domain_name", "enabled", "id", "name", "scanner", "parent_id",
          "tags", "links" })
    public static Project create(boolean isDomain, String description, String domainId, String domainName,
-         boolean enabled, String id, String name, String parentId, List<String> tags, Link link) {
+         boolean enabled, String id, String name, String scanner, String parentId, List<String> tags, Link link) {
       return builder().isDomain(isDomain).description(description).domainId(domainId).domainName(domainName)
-            .enabled(enabled).id(id).name(name).parentId(parentId).tags(tags).link(link).build();
+            .enabled(enabled).id(id).name(name).scanner(scanner).parentId(parentId).tags(tags).link(link).build();
    }
 
    Project() {
    }
-   
+
    public abstract Builder toBuilder();
 
    public static Builder builder() {
       return new AutoValue_Project.Builder().isDomain(false).enabled(true);
    }
-   
+
    @AutoValue.Builder
    public abstract static class Builder {
       public abstract Builder isDomain(boolean isDomain);
@@ -64,13 +65,14 @@ public abstract class Project {
       public abstract Builder enabled(boolean enabled);
       public abstract Builder id(String id);
       public abstract Builder name(String name);
+      public abstract Builder scanner(String scanner);
       public abstract Builder parentId(String parentId);
       public abstract Builder tags(List<String> tags);
       public abstract Builder link(Link link);
-      
+
       abstract List<String> tags();
       abstract Project autoBuild();
-      
+
       public Project build() {
          tags(tags() == null ? null : ImmutableList.copyOf(tags()));
          return autoBuild();
